@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Maze Game</title>
+    <style>
+        #maze {
+            width: 400px;
+            height: 400px;
+            background-color: #eee;
+            position: relative;
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #999;
+            box-sizing: border-box;
+            position: absolute;
+        }
+
+        .player {
+            background-color: blue;
+            z-index: 1;
+        }
+
+        .treasure {
+            background-color: yellow;
+        }
+
+        .obstacle {
+            background-color: gray;
+        }
+
+        .lava {
+            background-color: red;
+        }
+
+        .enemy {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="maze"></div>
+    <script>
+      const maze = document.getElementById('maze');
+      const gridSize = 20;
+      const cellSize = 20;
+      const numRows = maze.clientHeight / cellSize;
+      const numCols = maze.clientWidth / cellSize;
+      let playerPos = { x: 0, y: 0 };
+      let treasurePos = { x: Math.floor(Math.random() * numCols), y: Math.floor(Math.random() * numRows) };
+      const numObstacles = 20;
+      const numLava = 10;
+      const numEnemies = 5;
+      let enemyPositions = [];
+
+      function drawMaze() {
+          maze.innerHTML = '';
+          for (let y = 0; y < numRows; y++) {
+              for (let x = 0; x < numCols; x++) {
+                  const cell = document.createElement('div');
+                  cell.className = 'cell';
+                  cell.style.top = `${y * cellSize}px`;
+                  cell.style.left = `${x * cellSize}px`;
+                  maze.appendChild(cell);
+              }
+          }
+          generateObstacles();
+          generateLava();
+          generateEnemies();
+      }
+
+      function generateObstacles() {
+          for (let i = 0; i < numObstacles; i++) {
+              const obstacleX = Math.floor(Math.random() * numCols);
+              const obstacleY = Math.floor(Math.random() * numRows);
+              const obstacleCell = document.createElement('div');
+              obstacleCell.className = 'cell obstacle';
+              obstacleCell.style.top = `${obstacleY * cellSize}px`;
+              obstacleCell.style.left = `${obstacleX * cellSize}px`;
+              maze.appendChild(obstacleCell);
+          }
+      }
+
+      function generateLava() {
+          for (let i = 0; i < numLava; i++) {
+              const lavaX = Math.floor(Math.random() * numCols);
+              const lavaY = Math.floor(Math.random() * numRows);
+              const lavaCell = document.createElement('div');
+              lavaCell.className = 'cell lava';
+              lavaCell.style.top = `${lavaY * cellSize}px`;
+              lavaCell.style.left = `${lavaX * cellSize}px`;
+              maze.appendChild(lavaCell);
+          }
+      }
+
+      function generateEnemies() {
+          for (let i = 0; i < numEnemies; i++) {
+              const enemyX = Math.floor(Math.random() * numCols);
+              const enemyY = Math.floor(Math.random() * numRows);
+              enemyPositions.push({ x: enemyX, y: enemyY });
+              const enemyCell = document.createElement('div');
+              enemyCell.className = 'cell enemy';
+              enemyCell.style.top = `${enemyY * cellSize}px`;
+              enemyCell.style.left = `${enemyX * cellSize}px`;
+              maze.appendChild(enemyCell);
+          }
+      }
+
+      function drawPlayer() {
+          const playerCell = document.createElement('div');
+          playerCell.className = 'cell player';
+          playerCell.style.top = `${playerPos.y * cellSize}px`;
+          playerCell.style.left = `${playerPos.x * cellSize}px`;
+          maze.appendChild(playerCell);
+      }
+
+      function drawTreasure() {
+          const treasureCell = document.createElement('div');
+          treasureCell.className = 'cell treasure';
+          treasureCell.style.top = `${treasurePos.y * cellSize}px`;
+          treasureCell.style.left = `${treasurePos.x * cellSize}px`;
+          maze.appendChild(treasureCell);
+      }
+
+      function checkCollision() {
+          const currentPlayerCell = document.elementFromPoint(playerPos.x * cellSize + cellSize / 2, playerPos.y * cellSize + cellSize / 2);
+          if (currentPlayerCell.classList.contains('obstacle')) {
+              alert('Oops! You hit an obstacle. Try again!');
+              resetGame();
+          } else if (currentPlayerCell.classList.contains('lava')) {
+              alert('Oops! You fell into lava. Try again!');
+              resetGame();
+          } else if (currentPlayerCell.classList.contains('enemy')) {
+              alert('Oops! You were caught by an enemy. Try again!');
+              resetGame();
+          } else if (playerPos.x === treasurePos.x && playerPos.y === treasurePos.y) {
+              alert('You found the treasure! Congratulations!');
+              resetGame();
+          }
+      }
+
+      function resetGame() {
+          playerPos = { x: 0, y: 0 };
+          treasurePos = { x: Math.floor(Math.random() * numCols), y: Math.floor(Math.random() * numRows) };
+          drawMaze();
+          drawPlayer();
+          drawTreasure();
+      }
+
+      function moveEnemies() {
+          enemyPositions.forEach((enemyPos, index) => {
+              const direction = Math.floor(Math.random() * 4);
+              switch (direction) {
+                  case 0:
+                      if (enemyPos.y > 0) enemyPos.y--;
+                      break;
+                  case 1:
+                      if (enemyPos.y < numRows - 1) enemyPos.y++;
+                      break;
+                  case 2:
+                      if (enemyPos.x > 0) enemyPos.x--;
+                      break;
+                  case 3:
+                      if (enemyPos.x < numCols - 1) enemyPos.x++;
+                      break;
+              }
+              const enemyCell = maze.getElementsByClassName('enemy')[index];
+              enemyCell.style.top = `${enemyPos.y * cellSize}px`;
+              enemyCell.style.left = `${enemyPos.x * cellSize}px`;
+          });
+      }
+
+      document.addEventListener('keydown', (e) => {
+          switch (e.key) {
+              case 'ArrowUp':
+                  if (playerPos.y > 0) {
+                      playerPos.y--;
+                      moveEnemies()
+                  }
+                  break;
+              case 'ArrowDown':
+                  if (playerPos.y < numRows - 1) {
+                      playerPos.y++;
+                      moveEnemies()
+                  }
+                  break;
+              case 'ArrowLeft':
+                  if (playerPos.x > 0) {
+                      playerPos.x--;
+                      moveEnemies()
+                  }
+                  break;
+              case 'ArrowRight':
+                  if (playerPos.x < numCols - 1) {
+                      playerPos.x++;
+                      moveEnemies()
+                  }
+                  break;
+          }
+          checkCollision();
+          drawPlayer();
+      });
+
+      drawMaze();
+      drawPlayer();
+      drawTreasure();
+  </script>
+</body>
+</html>

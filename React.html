@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reaction Time Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      color: #333;
+    }
+    p {
+      color: #666;
+      font-size: 18px;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    .testButton {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin: 10px;
+    }
+    .testButton:hover {
+      background-color: #45a049;
+    }
+    #box {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      margin-top: 20px;
+      transition: background-color 1s;
+    }
+    #result {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #4CAF50;
+    }
+    #average {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>Reaction Time Calculator</h1>
+    <p>Click the buttons below to start the tests.</p>
+    <div class="button-container">
+      <button class="testButton" onclick="startTest(1)">Test 1</button>
+      <button class="testButton" onclick="startTest(2)">Test 2</button>
+      <button class="testButton" onclick="startTest(3)">Test 3</button>
+    </div>
+    <div id="box"></div>
+    <div id="result"></div>
+    <div id="average">(Average reaction time: USA - 0.25s, World - 0.28s)</div>
+  </div>
+
+  <script>
+    function startTest(testNumber) {
+      var startTime, endTime;
+      var box = document.getElementById('box');
+      box.style.backgroundColor = 'red';
+      document.getElementById('result').innerText = '';
+
+      setTimeout(function() {
+        box.style.backgroundColor = 'green';
+        startTime = new Date().getTime();
+        setTimeout(function() {
+          endTime = new Date().getTime();
+          var reactionTime = (endTime - startTime) / 1000; // in seconds
+          document.getElementById('result').innerText = 'Test ' + testNumber + ' - Your reaction time: ' + reactionTime.toFixed(3) + ' seconds';
+
+          // Comparison with average reaction times
+          var usaAvg = 0.25;
+          var worldAvg = 0.28;
+          var comparison = "";
+          if (reactionTime < usaAvg) {
+            comparison = "Faster than USA average!";
+          } else if (reactionTime > usaAvg) {
+            comparison = "Slower than USA average.";
+          } else {
+            comparison = "Equal to USA average.";
+          }
+          if (reactionTime < worldAvg) {
+            comparison += " Faster than world average!";
+          } else if (reactionTime > worldAvg) {
+            comparison += " Slower than world average.";
+          } else {
+            comparison += " Equal to world average.";
+          }
+          document.getElementById('average').innerText = '(Average reaction time: USA - 0.25s, World - 0.28s) ' + comparison;
+        }, Math.random() * 3000 + 1000); // random delay between 1 to 4 seconds
+      }, Math.random() * 3000 + 1000); // random delay before changing color
+    }
+  </script>
+</body>
+</html>

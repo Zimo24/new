@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Accessor</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: purple;
+        }
+        p {
+            color: grey;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        input[type="text"] {
+            width: 70%;
+        }
+        button {
+            background-color: purple;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #6a0dad;
+        }
+        #websiteContainer {
+            margin-top: 20px;
+        }
+        iframe {
+            border: none;
+        }
+        .top-right-box {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #6a0dad;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .top-right-box a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 5px;
+        }
+        .top-websites {
+            margin-top: 40px;
+        }
+        .top-websites ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .top-websites li {
+            margin-bottom: 5px;
+            color: purple;
+        }
+    </style>
+  <link rel="stylesheet" href="new.css">
+</head>
+<body>
+    <div class="top-right-box">
+        <a href="https://www.google.com" target="_blank">Google</a>
+        <a href="https://www.wikipedia.org" target="_blank">Wikipedia</a>
+        <a href="https://www.reddit.com" target="_blank">Reddit</a>
+        <a href="https://www.youtube.com" target="_blank">YouTube</a>
+    </div>
+    <h1>Website Accessor</h1>
+    <p>Enter the URL of the website you want to access:</p>
+    <input type="text" id="websiteUrl" placeholder="Enter URL">
+    <button onclick="loadWebsite()">Load Website</button>
+
+    <div id="websiteContainer">
+        <!-- This is where the website will be loaded -->
+    </div>
+
+    <div class="top-websites">
+        <h2>Top 20 Websites</h2>
+        <ul>
+            <li><a href="https://www.google.com" target="_blank">https://www.google.com</a></li>
+            <li><a href="https://www.youtube.com" target="_blank">https://www.youtube.com</a></li>
+            <li><a href="https://www.facebook.com" target="_blank">https://www.facebook.com</a></li>
+            <li><a href="https://www.amazon.com" target="_blank">https://www.amazon.com</a></li>
+            <li><a href="https://www.wikipedia.org" target="_blank">https://www.wikipedia.org</a></li>
+            <li><a href="https://www.twitter.com" target="_blank">https://www.twitter.com</a></li>
+            <li><a href="https://www.instagram.com" target="_blank">https://www.instagram.com</a></li>
+            <li><a href="https://www.reddit.com" target="_blank">https://www.reddit.com</a></li>
+            <li><a href="https://www.yahoo.com" target="_blank">https://www.yahoo.com</a></li>
+            <li><a href="https://www.linkedin.com" target="_blank">https://www.linkedin.com</a></li>
+            <li><a href="https://www.netflix.com" target="_blank">https://www.netflix.com</a></li>
+            <li><a href="https://www.twitch.tv" target="_blank">https://www.twitch.tv</a></li>
+            <li><a href="https://www.ebay.com" target="_blank">https://www.ebay.com</a></li>
+            <li><a href="https://www.microsoft.com" target="_blank">https://www.microsoft.com</a></li>
+            <li><a href="https://www.apple.com" target="_blank">https://www.apple.com</a></li>
+            <li><a href="https://www.github.com" target="_blank">https://www.github.com</a></li>
+            <li><a href="https://www.bing.com" target="_blank">https://www.bing.com</a></li>
+            <li><a href="https://www.spotify.com" target="_blank">https://www.spotify.com</a></li>
+            <li><a href="https://www.imgur.com" target="_blank">https://www.imgur.com</a></li>
+            <li><a href="https://www.pinterest.com" target="_blank">https://www.pinterest.com</a></li>
+        </ul>
+    </div>
+    <a href="home.html" class="home">HOME</a>
+
+    <script>
+        function loadWebsite() {
+            var websiteUrl = document.getElementById('websiteUrl').value;
+            var websiteContainer = document.getElementById('websiteContainer');
+            // Checking if the URL starts with http:// or https://
+            if (websiteUrl.startsWith('http://') || websiteUrl.startsWith('https://')) {
+                websiteContainer.innerHTML = `<iframe src="${websiteUrl}" width="100%" height="500px"></iframe>`;
+            } else {
+                alert('Please enter a valid URL starting with http:// or https://');
+            }
+        }
+    </script>
+</body>
+</html>

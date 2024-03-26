@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pong</title>
+  <link rel="stylesheet" href="new.css">
+</head>
+
+<body>
+
+  <canvas id="gameCanvas" width="1350" height="550"></canvas>
+  <p></p>
+  <a href="home.html" class="home" >HOME</a>
+  <script>
+
+    // Score
+    var playerScore = 0;
+    var computerScore = 0;
+
+    // Get canvas and context
+    var canvas = document.getElementById("gameCanvas");
+    var ctx = canvas.getContext("2d");
+
+    // Player paddle
+    var playerY = 140;
+    const paddleHeight = 104;
+    const paddleWidth = 13;
+
+    // Computer paddle
+    var computerY = 140;
+
+    // Ball
+    ballX = canvas.width / 2;
+    ballY = canvas.height / 2;
+    const ballRadius = 15;
+    var ballSpeedX = 5;
+    var ballSpeedY = 5;
+
+    // Respawn ball
+    function spawnBall() {
+      ballX = canvas.width / 2;
+      ballY = canvas.height / 2;
+      ballSpeedX = -ballSpeedX;
+      ballSpeedY = 3;
+    }
+
+    // Update game state
+    function update() {
+
+      // Move paddles
+      if (keys[38] && playerY > 0) {
+        playerY -= 5;
+      }
+      if (keys[40] && playerY < canvas.height - paddleHeight) {
+        playerY += 5;
+      }
+
+      // Computer paddle movement
+      if (computerY + paddleHeight / 2 < ballY) {
+          computerY += 3;
+        } else {
+          computerY -= 3;
+        }
+
+      // Move ball
+      ballX += ballSpeedX;
+      ballY += ballSpeedY;
+
+      // Bounce off edges
+      if (ballY < ballRadius ||
+        ballY > canvas.height - ballRadius) {
+        ballSpeedY = -ballSpeedY;
+      }
+
+      // Check for paddle bounce
+      if (ballX - ballRadius < paddleWidth &&
+        ballY > playerY &&
+        ballY < playerY + paddleHeight) {
+
+        ballSpeedX = -ballSpeedX;
+        ballSpeedY += (ballY - (playerY + paddleHeight / 2)) * 0.35;
+      }
+
+      // Check for computer paddle bounce  
+      if (ballX + ballRadius > canvas.width - paddleWidth &&
+        ballY > computerY &&
+        ballY < computerY + paddleHeight) {
+
+        ballSpeedX = -ballSpeedX;
+        //ballSpeedY = (ballY - (computerY + paddleHeight/2)) * 0.35;
+
+        if (ballX < paddleWidth ||
+          ballX > canvas.width - paddleWidth) {
+
+          // Move ball 10px towards center
+          if (ballX < canvas.width / 2) {
+            ballX += 10;
+          } else {
+            ballX -= 10;
+          }
+        }
+
+      }
+
+      // Check for score
+      if (ballX < 0) {
+        computerScore++;
+        spawnBall();
+      }
+      if (ballX > canvas.width) {
+        playerScore++;
+        spawnBall();
+      }
+
+      // Clear canvas  
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw scores
+      ctx.font = "32px Fantasy";
+      ctx.fillStyle = "white";
+      ctx.textAlign = "right";
+      ctx.fillText(playerScore, canvas.width/2-5, canvas.height - 32);
+      ctx.fillText(":", canvas.width/2+2.5, canvas.height - 32);
+      ctx.textAlign = "left";
+      ctx.fillText(computerScore, canvas.width/2+5, canvas.height - 32);
+      // Draw updated positions
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, playerY, paddleWidth, paddleHeight);
+      ctx.fillRect(canvas.width - paddleWidth, computerY, paddleWidth, paddleHeight);
+      ctx.fillStyle = "yellow";
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Input handling
+    var keys = [];
+    document.addEventListener("keydown", function (e) {
+      keys[e.keyCode] = true;
+      update();
+    });
+    document.addEventListener("keyup", function (e) {
+      keys[e.keyCode] = false;
+    });
+
+    // Game loop
+    setInterval(update, 1000 / 60);
+
+  </script>
+
+</body>
+
+</html>

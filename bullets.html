@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buller's and Lasers</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        iframe {
+            width: 95vw; /* Adjust width as needed */
+            height: 100vh; /* Adjust height as needed */
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Prevents scroll bars */
+        }
+    </style>
+</head>
+<body>
+    <iframe id="gameFrame" src="http://localhost:50558/" frameborder="0"></iframe>
+
+    <script>
+        window.onload = function() {
+            var iframe = document.getElementById("gameFrame");
+            iframe.focus();
+        };
+    </script>
+</body>
+</html>
